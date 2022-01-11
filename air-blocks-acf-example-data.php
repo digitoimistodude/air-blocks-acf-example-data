@@ -1,20 +1,5 @@
 <?php
 /**
- * TODO: Add here the name and meaning of this file, air-blocks-acf-example-data.php
- *
- * TODO: Add description here for this filefile called air-blocks-acf-example-data.
- *
- * @Author:		Elias Kautto
- * @Date:   		2022-01-11 13:19:55
- * @Last Modified by:   Elias Kautto
- * @Last Modified time: 2022-01-11 15:47:17
- *
- * @package air-blocks
- * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
- */
-
-
-/**
  * Plugin Name: ACF blocks example data
  * Description: Try to set example data for ACF blocks automatically based on field type.
  * Plugin URI: https://dude.fi
@@ -27,10 +12,10 @@
  * @Author: Timi Wahalahti
  * @Date:   2022-01-11 09:49:59
  * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2022-01-11 13:03:18
+ * @Last Modified time: 2022-01-11 17:56:46
  */
 
-namespace ACF_Blocks_Example_Data;
+namespace Air_Blocks_ACF_Example_Data;
 
 require "create-blocks-page.php";
 
@@ -38,12 +23,24 @@ add_filter( 'acf/register_block_type_args', __NAMESPACE__ . '\maybe_set_block_ex
 function maybe_set_block_example_data( $block ) {
   $block_example_data = [];
 
+  // Get fields for this block
   $block_fields = acf_get_block_fields( $block );
   if ( empty( $block_fields ) ) {
     return $block;
   }
 
+  $skip_block = apply_filters( "air_block_acf_example_data_skip/{$block['name']}", false, $block );
+  $skip_block = apply_filters( "air_block_acf_example_data_skip/" . str_replace( 'acf/', '', $block['name'] ), false, $block );
+  $skip_block = apply_filters( 'air_block_acf_example_data_skip', false, $block );
+
+  if ( $skip_block ) {
+    return $block;
+  }
+
+  // Loop fields
   foreach ( $block_fields as $block_field ) {
+
+    // Try to get the example data
     $field_example_data = get_field_type_example_data( $block_field['type'], $block_field['name'], $block_field );
     if ( empty( $field_example_data ) ) {
       continue;
@@ -52,13 +49,18 @@ function maybe_set_block_example_data( $block ) {
     $block_example_data[ $block_field['name'] ] = $field_example_data;
   }
 
-  $block['example'] = [
-    'attributes' => [
-      'mode' => 'preview',
-      'data' => $block_example_data,
-    ],
-    'viewportWidth' => 1400,
-  ];
+  // Create example base for blocks if does not exist already
+  if ( ! isset( $block['example'] ) || empty( $block['example'] ) ) {
+    $block['example'] = [
+      'attributes' => [
+        'mode' => 'preview',
+        'data' => [],
+      ],
+    ];
+  }
+
+  // Merge manually set example data with automated ones, using always the manual ones if available
+  $block['example']['attributes']['data'] = wp_parse_args( $block['example']['attributes']['data'], $block_example_data );
 
   return $block;
 } // ens maybe_set_block_example_data
@@ -91,17 +93,20 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       break;
 
     case 'select':
+      // Try to set default only for svg icon fields
       if ( false !== strpos( $field_name, 'icon_svg' ) ) {
-        $data = apply_filters( 'air_acf_block_example_data_default_svg_icon', null );
+        $data = apply_filters( 'air_blocks_acf_example_data_default_svg_icon', null );
       }
       break;
 
     case 'image':
-      $example_data_image_id = get_example_data_image();
+      // Get random image
+      $example_data_image_id = get_image();
 
-      // default return id
+      // Return id as default
       $data = $example_data_image_id;
 
+      // Change the return based on format selected on field
       if ( 'url' === $field['return_format'] ) {
         $data = wp_get_attachment_url( $example_data_image_id, 'large' );
       } elseif ( 'array' === $field['return_format'] ) {
@@ -109,15 +114,41 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       }
       break;
 
+    case 'gallery':
+      // How many images should be shown on the gallery
+      $x_times = apply_filters( "air_block_acf_example_data_gallery_images_count/{$field_name}", 3, $field_name, $field );
+      $x_times = apply_filters( 'air_block_acf_example_data_gallery_images_count', 3, $field_name, $field );
+
+      // Get images for the gallery
+      for ( $x = 0; $x < $x_times; $x++ ) {
+        $image_id = get_image();
+
+        // Change the return based on format selected on field
+        if ( 'url' === $field['return_format'] ) {
+          $data[] = wp_get_attachment_url( $image_id, 'large' );
+        } elseif ( 'array' === $field['return_format'] ) {
+          $data[] = acf_get_attachment( $image_id );
+        }
+      }
+      break;
+
     case 'relationship':
-      $example_posts = get_example_data_posts( [
+      $query_args = [
         'post_type'       => $field['post_type'],
         'posts_per_page'  => ! empty( $field['min'] ) ? $field['min'] : 3,
-      ] );
+      ];
+
+      $query_args = apply_filters( "air_block_acf_example_data_relationship_query_args/{$field_name}", $query_args, $field_name, $field );
+      $query_args = apply_filters( 'air_block_acf_example_data_relationship_query_args', $query_args, $field_name, $field );
+
+      // Get posts with args set for field
+      $example_posts = get_posts( $query_args );
 
       if ( ! empty( $example_posts ) ) {
+        // Rerturn WP_Post objects as default
         $data = $example_posts;
 
+        // Change the return based on format selected on field
         if ( 'id' === $field['return_format'] ) {
           $data = wp_list_pluck( $example_posts, 'ID' );
         }
@@ -129,16 +160,23 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       $sub_set_data = [];
 
       if ( ! empty( $field['sub_fields'] ) ) {
+        // Loop repeaters sub fields
         foreach ( $field['sub_fields'] as $sub_field ) {
+          // Get example data for the sub field
           $sub_field_data = get_field_type_example_data( $sub_field['type'], $sub_field['name'], $sub_field );
 
+          // Maybe add field and example data to parent field
           if ( ! empty( $sub_field_data ) ) {
             $sub_set_data[ $sub_field['name'] ] = $sub_field_data;
           }
         }
 
+        // Try to determine how many times the repeater should be shown
         $x_times = ! empty( $field['min'] ) ? $field['min'] : 3;
+        $x_times = apply_filters( "air_block_acf_example_data_repeater_count/{$field_name}", $x_times, $field_name, $field );
+        $x_times = apply_filters( 'air_block_acf_example_data_repeater_count', $x_times, $field_name, $field );
 
+        // Duplicate the one repeater field subset
         for ( $x = 0; $x < $x_times; $x++ ) {
           $data[] = $sub_set_data;
         }
@@ -147,17 +185,19 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       break;
   }
 
-  $data = apply_filters( "air_acf_block_example_data/{$field_type}", $data, $field_type, $field_name, $field );
-  $data = apply_filters( "air_acf_block_example_data/{$field_name}", $data, $field_type, $field_name, $field );
-  $data = apply_filters( 'air_acf_block_example_data', $data, $field_type, $field_name, $field );
+  // Allow filtering the example data for specific field type, name or in general
+  $data = apply_filters( "air_block_acf_example_data/{$field_type}", $data, $field_type, $field_name, $field );
+  $data = apply_filters( "air_block_acf_example_data/{$field_name}", $data, $field_type, $field_name, $field );
+  $data = apply_filters( 'air_block_acf_example_data', $data, $field_type, $field_name, $field );
 
   return $data;
 } // end get_field_type_example_data
 
-function get_example_data_image() {
+function get_image() {
   $media_query = new \WP_Query( [
     'post_type'       => 'attachment',
     'post_status'     => 'inherit',
+    'orderby'         => 'rand',
     'post_mime_type'  => [ 'image/jpeg', 'image/gif', 'image/png' ],
     'posts_per_page'  => 1,
   ] );
@@ -172,9 +212,9 @@ function get_example_data_image() {
   }
 
   return $media_ids[0];
-} // end get_example_data_image
+} // end get_image
 
-function get_example_data_posts( $query_args ) {
+function get_posts( $query_args ) {
   if ( empty( $query_args ) ) {
     return;
   }
@@ -186,4 +226,4 @@ function get_example_data_posts( $query_args ) {
   }
 
   return $posts_query->posts;
-} // end get_example_data_posts
+} // end get_posts
