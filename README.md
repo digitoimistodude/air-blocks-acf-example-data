@@ -2,6 +2,10 @@
 
 Try to set example data for ACF blocks automatically based on field type. If theme sets the example data, plugin tries to fill those where suitable. So the theme example data is always the defining place, if automatic data isn't wanted.
 
+## All blocks page
+
+Plugin creates automatically page "/blocks" that shows all registered ACF blocks with their example data.
+
 ## Supported field types
 
 Currently following ACF field types are supported:
