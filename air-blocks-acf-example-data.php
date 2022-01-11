@@ -12,7 +12,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2022-01-11 09:49:59
  * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2022-01-11 13:03:18
+ * @Last Modified time: 2022-01-11 13:32:26
  */
 
 namespace ACF_Blocks_Example_Data;
@@ -35,13 +35,17 @@ function maybe_set_block_example_data( $block ) {
     $block_example_data[ $block_field['name'] ] = $field_example_data;
   }
 
-  $block['example'] = [
-    'attributes' => [
-      'mode' => 'preview',
-      'data' => $block_example_data,
-    ],
-    'viewportWidth' => 1400,
-  ];
+  if ( ! isset( $block['example'] ) || empty( $block['example'] ) ) {
+    $block['example'] = [
+      'attributes' => [
+        'mode' => 'preview',
+        'data' => [],
+      ],
+      'viewportWidth' => 1400,
+    ];
+  }
+
+  $block['example']['attributes']['data'] = wp_parse_args( $block['example']['attributes']['data'], $block_example_data );
 
   return $block;
 } // ens maybe_set_block_example_data
