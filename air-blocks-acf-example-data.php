@@ -12,7 +12,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2022-01-11 09:49:59
  * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2022-01-11 13:32:26
+ * @Last Modified time: 2022-01-11 13:37:45
  */
 
 namespace ACF_Blocks_Example_Data;
@@ -41,7 +41,6 @@ function maybe_set_block_example_data( $block ) {
         'mode' => 'preview',
         'data' => [],
       ],
-      'viewportWidth' => 1400,
     ];
   }
 
