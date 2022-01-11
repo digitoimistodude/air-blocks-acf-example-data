@@ -12,7 +12,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2022-01-11 09:49:59
  * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2022-01-11 16:10:09
+ * @Last Modified time: 2022-01-11 16:11:24
  */
 
 namespace Air_Blocks_ACF_Example_Data;
@@ -27,8 +27,8 @@ function maybe_set_block_example_data( $block ) {
     return $block;
   }
 
-  $skip_block = apply_filters( "air_block_acf_example_data_skip/$block_field['type']", false );
-  $skip_block = apply_filters( "air_block_acf_example_data_skip/$block_field['name']", false );
+  $skip_block = apply_filters( "air_block_acf_example_data_skip/{$block_field['type']}", false );
+  $skip_block = apply_filters( "air_block_acf_example_data_skip/{$block_field['name']}", false );
   $skip_block = apply_filters( 'air_block_acf_example_data_skip', false );
 
   if ( $skip_block ) {
