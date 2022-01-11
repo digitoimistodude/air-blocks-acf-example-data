@@ -1,5 +1,20 @@
 <?php
 /**
+ * TODO: Add here the name and meaning of this file, air-blocks-acf-example-data.php
+ *
+ * TODO: Add description here for this filefile called air-blocks-acf-example-data.
+ *
+ * @Author:		Elias Kautto
+ * @Date:   		2022-01-11 13:19:55
+ * @Last Modified by:   Elias Kautto
+ * @Last Modified time: 2022-01-11 15:47:17
+ *
+ * @package air-blocks
+ * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+ */
+
+
+/**
  * Plugin Name: ACF blocks example data
  * Description: Try to set example data for ACF blocks automatically based on field type.
  * Plugin URI: https://dude.fi
@@ -16,6 +31,8 @@
  */
 
 namespace ACF_Blocks_Example_Data;
+
+require "create-blocks-page.php";
 
 add_filter( 'acf/register_block_type_args', __NAMESPACE__ . '\maybe_set_block_example_data' );
 function maybe_set_block_example_data( $block ) {
@@ -122,7 +139,7 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
 
         $x_times = ! empty( $field['min'] ) ? $field['min'] : 3;
 
-        for ( $x; $x < $x_times; $x++ ) {
+        for ( $x = 0; $x < $x_times; $x++ ) {
           $data[] = $sub_set_data;
         }
       }
