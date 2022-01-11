@@ -12,7 +12,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2022-01-11 09:49:59
  * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2022-01-11 15:07:29
+ * @Last Modified time: 2022-01-11 16:10:09
  */
 
 namespace Air_Blocks_ACF_Example_Data;
@@ -24,6 +24,14 @@ function maybe_set_block_example_data( $block ) {
   // Get fields for this block
   $block_fields = acf_get_block_fields( $block );
   if ( empty( $block_fields ) ) {
+    return $block;
+  }
+
+  $skip_block = apply_filters( "air_block_acf_example_data_skip/$block_field['type']", false );
+  $skip_block = apply_filters( "air_block_acf_example_data_skip/$block_field['name']", false );
+  $skip_block = apply_filters( 'air_block_acf_example_data_skip', false );
+
+  if ( $skip_block ) {
     return $block;
   }
 
@@ -106,10 +114,11 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
 
     case 'gallery':
       // How many images should be shown on the gallery
-      $x_times = apply_filters( 'air_block_acf_example_data_gallery_images_count', 3 );
+      $x_times = apply_filters( "air_block_acf_example_data_gallery_images_count/{$field_name}", 3, $field_name, $field );
+      $x_times = apply_filters( 'air_block_acf_example_data_gallery_images_count', 3, $field_name, $field );
 
       // Get images for the gallery
-      for ( $x; $x < $x_times; $x++ ) {
+      for ( $x = 0; $x < $x_times; $x++ ) {
         $image_id = get_image();
 
         // Change the return based on format selected on field
@@ -122,11 +131,16 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       break;
 
     case 'relationship':
-      // Get posts with args set for field
-      $example_posts = get_posts( [
+      $query_args = [
         'post_type'       => $field['post_type'],
         'posts_per_page'  => ! empty( $field['min'] ) ? $field['min'] : 3,
-      ] );
+      ];
+
+      $query_args = apply_filters( "air_block_acf_example_data_relationship_query_args/{$field_name}", $query_args, $field_name, $field );
+      $query_args = apply_filters( 'air_block_acf_example_data_relationship_query_args', $query_args, $field_name, $field );
+
+      // Get posts with args set for field
+      $example_posts = get_posts( $query_args );
 
       if ( ! empty( $example_posts ) ) {
         // Rerturn WP_Post objects as default
@@ -157,9 +171,11 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
 
         // Try to determine how many times the repeater should be shown
         $x_times = ! empty( $field['min'] ) ? $field['min'] : 3;
+        $x_times = apply_filters( "air_block_acf_example_data_repeater_count/{$field_name}", $x_times, $field_name, $field );
+        $x_times = apply_filters( 'air_block_acf_example_data_repeater_count', $x_times, $field_name, $field );
 
         // Duplicate the one repeater field subset
-        for ( $x; $x < $x_times; $x++ ) {
+        for ( $x = 0; $x < $x_times; $x++ ) {
           $data[] = $sub_set_data;
         }
       }
