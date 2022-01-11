@@ -12,7 +12,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2022-01-11 09:49:59
  * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2022-01-11 13:51:31
+ * @Last Modified time: 2022-01-11 15:07:29
  */
 
 namespace Air_Blocks_ACF_Example_Data;
@@ -104,6 +104,23 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       }
       break;
 
+    case 'gallery':
+      // How many images should be shown on the gallery
+      $x_times = apply_filters( 'air_block_acf_example_data_gallery_images_count', 3 );
+
+      // Get images for the gallery
+      for ( $x; $x < $x_times; $x++ ) {
+        $image_id = get_image();
+
+        // Change the return based on format selected on field
+        if ( 'url' === $field['return_format'] ) {
+          $data[] = wp_get_attachment_url( $image_id, 'large' );
+        } elseif ( 'array' === $field['return_format'] ) {
+          $data[] = acf_get_attachment( $image_id );
+        }
+      }
+      break;
+
     case 'relationship':
       // Get posts with args set for field
       $example_posts = get_posts( [
@@ -162,6 +179,7 @@ function get_image() {
   $media_query = new \WP_Query( [
     'post_type'       => 'attachment',
     'post_status'     => 'inherit',
+    'orderby'         => 'rand',
     'post_mime_type'  => [ 'image/jpeg', 'image/gif', 'image/png' ],
     'posts_per_page'  => 1,
   ] );
