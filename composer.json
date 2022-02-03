@@ -1,0 +1,24 @@
+{
+  "name": "digitoimistodude/air-blocks-acf-example-data",
+  "type": "wordpress-plugin",
+  "description": "",
+  "homepage": "https://github.com/digitoimistodude/air-blocks-acf-example-data",
+  "keywords": [
+    "wordpress",
+    "plugin"
+  ],
+  "license": "GPL-3.0+",
+  "version": "0.1.0",
+  "authors": [
+    {
+      "name": "Timi Wahalahti",
+      "email": "timi@dude.fi",
+      "homepage": "https://github.com/timiwahalahti"
+    },
+    {
+      "name": "Elias Kautto",
+      "email": "elias@dude.fi",
+      "homepage": "https://github.com/eliaskau"
+    }
+  ]
+}
