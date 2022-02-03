@@ -4,7 +4,7 @@ Try to set example data for ACF blocks automatically based on field type. If the
 
 ## All blocks page
 
-Plugin creates automatically page "/blocks" that shows all registered ACF blocks with their example data.
+Plugin creates automatically page `/blocks` that shows all registered ACF blocks with their example data.
 
 ## Supported field types
 
