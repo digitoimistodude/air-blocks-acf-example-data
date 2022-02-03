@@ -1,6 +1,6 @@
 {
   "name": "digitoimistodude/air-blocks-acf-example-data",
-  "type": "wordpress-plugin",
+  "type": "wordpress-muplugin",
   "description": "",
   "homepage": "https://github.com/digitoimistodude/air-blocks-acf-example-data",
   "keywords": [
