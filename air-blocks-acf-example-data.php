@@ -61,6 +61,9 @@ function maybe_set_block_example_data( $block ) {
 
   // Merge manually set example data with automated ones, using always the manual ones if available
   $block['example']['attributes']['data'] = wp_parse_args( $block['example']['attributes']['data'], $block_example_data );
+  
+  // Force ID for the block to work
+  $block['id'] = time();
 
   return $block;
 } // ens maybe_set_block_example_data
