@@ -17,6 +17,10 @@
 
 namespace Air_Blocks_ACF_Example_Data;
 
+if ( ! is_admin() || ! wp_doing_ajax() ) {
+  return;
+}
+
 require "create-blocks-page.php";
 
 add_filter( 'acf/register_block_type_args', __NAMESPACE__ . '\maybe_set_block_example_data' );
