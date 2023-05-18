@@ -17,7 +17,7 @@
 
 namespace Air_Blocks_ACF_Example_Data;
 
-if ( ! is_admin() || ! wp_doing_ajax() ) {
+if ( ! is_admin() ) {
   return;
 }
 
