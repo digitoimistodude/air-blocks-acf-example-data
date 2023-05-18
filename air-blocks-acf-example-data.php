@@ -12,7 +12,7 @@
  * @Author: Timi Wahalahti
  * @Date:   2022-01-11 09:49:59
  * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2022-01-11 17:56:46
+ * @Last Modified time: 2023-05-18 16:08:05
  */
 
 namespace Air_Blocks_ACF_Example_Data;
@@ -22,6 +22,16 @@ if ( ! is_admin() ) {
 }
 
 require "create-blocks-page.php";
+
+// Wider preview to ease out staring the small preview,
+// width should be viewportWidth / 2 for optimal experience.
+add_filter( 'admin_footer', function() { ?>
+  <style>
+    .block-editor-inserter__preview-container {
+      width: 600px !important;
+    }
+  </style>
+<?php } );
 
 add_filter( 'acf/register_block_type_args', __NAMESPACE__ . '\maybe_set_block_example_data' );
 function maybe_set_block_example_data( $block ) {
@@ -56,7 +66,8 @@ function maybe_set_block_example_data( $block ) {
   // Create example base for blocks if does not exist already
   if ( ! isset( $block['example'] ) || empty( $block['example'] ) ) {
     $block['example'] = [
-      'attributes' => [
+      'viewportWidth' => 1200,
+      'attributes'    => [
         'mode' => 'preview',
         'data' => [],
       ],
