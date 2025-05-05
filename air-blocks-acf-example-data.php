@@ -5,7 +5,7 @@
  * Plugin URI: https://dude.fi
  * Author: Digitoimisto Dude Oy
  * Author URI: https://dude.fi
- * Version: 0.1.0
+ * Version: 1.0.0
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
@@ -16,6 +16,14 @@
  */
 
 namespace Air_Blocks_ACF_Example_Data;
+
+/**
+* Github updater for this plugin.
+*/
+require 'plugin-update-checker/plugin-update-checker.php';
+use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
+
+$update_checker = PucFactory::buildUpdateChecker( 'http://githubupdates.dude.fi/plugins/digitoimistodude/air-blocks-acf-example-data', __FILE__, 'air-blocks-acf-example-data' );
 
 if ( ! is_admin() ) {
   return;
