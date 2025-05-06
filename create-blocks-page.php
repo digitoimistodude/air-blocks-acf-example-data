@@ -1,11 +1,7 @@
 <?php
 /**
- * TODO: Add here the name and meaning of this file, create-blocks-page.php
- *
- * TODO: Add description here for this filefile called create-blocks-page.
- *
- * @Author:		Elias Kautto
- * @Date:   		2022-01-11 15:02:49
+ * @Author: Elias Kautto
+ * @Date: 2022-01-11 15:02:49
  * @Last Modified by:   Timi Wahalahti
  * @Last Modified time: 2022-01-11 18:24:17
  *
@@ -15,17 +11,17 @@
 
 namespace ACF_Blocks_Example_Data;
 
-add_action( 'init', function() {
+add_action( 'init', function () {
   add_rewrite_rule( '^blocks', 'index.php?airallblocks=true', 'top' );
 } );
 
-add_filter( 'query_vars', function( $vars ) {
+add_filter( 'query_vars', function ( $vars ) {
   $vars[] = 'airallblocks';
 
   return $vars;
 } );
 
-add_filter( 'template_include', function( $template ) {
+add_filter( 'template_include', function ( $template ) {
   if ( ! get_query_var( 'airallblocks', false ) ) {
     return $template;
   }

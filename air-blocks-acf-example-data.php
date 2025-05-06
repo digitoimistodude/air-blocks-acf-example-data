@@ -5,14 +5,11 @@
  * Plugin URI: https://dude.fi
  * Author: Digitoimisto Dude Oy
  * Author URI: https://dude.fi
- * Version: 1.0.0
+ * Version: 1.0.1
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
- * @Author: Timi Wahalahti
- * @Date:   2022-01-11 09:49:59
- * @Last Modified by:   Timi Wahalahti
- * @Last Modified time: 2023-05-18 16:08:05
+ * @package Air_Blocks_ACF_Example_Data
  */
 
 namespace Air_Blocks_ACF_Example_Data;
@@ -29,11 +26,11 @@ if ( ! is_admin() ) {
   return;
 }
 
-require "create-blocks-page.php";
+require 'create-blocks-page.php';
 
 // Wider preview to ease out staring the small preview,
 // width should be viewportWidth / 2 for optimal experience.
-add_filter( 'admin_footer', function() { ?>
+add_filter( 'admin_footer', function () { ?>
   <style>
     .block-editor-inserter__preview-container {
       width: 600px !important;
@@ -51,8 +48,8 @@ function maybe_set_block_example_data( $block ) {
     return $block;
   }
 
-  $skip_block = apply_filters( "air_block_acf_example_data_skip/{$block['name']}", false, $block );
-  $skip_block = apply_filters( "air_block_acf_example_data_skip/" . str_replace( 'acf/', '', $block['name'] ), false, $block );
+  $skip_block = apply_filters( "air_block_acf_example_data_skip/{$block['name']}", false, $block ); // phpcs:ignore
+  $skip_block = apply_filters( 'air_block_acf_example_data_skip/' . str_replace( 'acf/', '', $block['name'] ), false, $block ); // phpcs:ignore
   $skip_block = apply_filters( 'air_block_acf_example_data_skip', false, $block );
 
   if ( $skip_block ) {
@@ -84,7 +81,7 @@ function maybe_set_block_example_data( $block ) {
 
   // Merge manually set example data with automated ones, using always the manual ones if available
   $block['example']['attributes']['data'] = wp_parse_args( $block['example']['attributes']['data'], $block_example_data );
-  
+
   // Force ID for the block to work
   $block['id'] = time();
 
@@ -97,33 +94,33 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
   switch ( $field_type ) {
     case 'text':
       $data = 'Lorem ipsum dolor sit amet';
-      break;
+    break;
 
     case 'textarea':
       $data = 'Pellentesque tincidunt nulla nisi, eget vehicula turpis tincidunt ut. Fusce pharetra justo nulla, sed porttitor nunc varius faucibus. Ut faucibus justo eu elementum dictum. Etiam non leo id nisl iaculis dapibus. In venenatis ipsum non lorem egestas ultrices.';
-      break;
+    break;
 
     case 'wysiwyg':
       $data = '<p>Nam molestie nec tortor. <a href="#">Donec placerat</a> leo sit amet velit. Vestibulum id justo ut vitae massa. <strong>Proin in dolor mauris consequat aliquam.</strong> Donec ipsum, vestibulum ullamcorper venenatis augue. Aliquam tempus nisi in auctor vulputate, erat felis pellentesque augue nec, pellentesque lectus justo nec erat. Aliquam et nisl. Quisque sit amet dolor in justo pretium condimentum.</p>';
-      break;
+    break;
 
     case 'link':
       $data = [
         'url'   => get_site_url(),
         'title' => 'Lorem ipsum dolor',
       ];
-      break;
+    break;
 
     case 'url':
       $data = get_site_url();
-      break;
+    break;
 
     case 'select':
       // Try to set default only for svg icon fields
       if ( false !== strpos( $field_name, 'icon_svg' ) ) {
         $data = apply_filters( 'air_blocks_acf_example_data_default_svg_icon', null );
       }
-      break;
+    break;
 
     case 'image':
       // Get random image
@@ -138,11 +135,11 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       } elseif ( 'array' === $field['return_format'] ) {
         $data = acf_get_attachment( $example_data_image_id );
       }
-      break;
+    break;
 
     case 'gallery':
       // How many images should be shown on the gallery
-      $x_times = apply_filters( "air_block_acf_example_data_gallery_images_count/{$field_name}", 3, $field_name, $field );
+      $x_times = apply_filters( "air_block_acf_example_data_gallery_images_count/{$field_name}", 3, $field_name, $field ); // phpcs:ignore
       $x_times = apply_filters( 'air_block_acf_example_data_gallery_images_count', 3, $field_name, $field );
 
       // Get images for the gallery
@@ -164,7 +161,7 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
         'posts_per_page'  => ! empty( $field['min'] ) ? $field['min'] : 3,
       ];
 
-      $query_args = apply_filters( "air_block_acf_example_data_relationship_query_args/{$field_name}", $query_args, $field_name, $field );
+      $query_args = apply_filters( "air_block_acf_example_data_relationship_query_args/{$field_name}", $query_args, $field_name, $field ); // phpcs:ignore
       $query_args = apply_filters( 'air_block_acf_example_data_relationship_query_args', $query_args, $field_name, $field );
 
       // Get posts with args set for field
@@ -199,7 +196,7 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
 
         // Try to determine how many times the repeater should be shown
         $x_times = ! empty( $field['min'] ) ? $field['min'] : 3;
-        $x_times = apply_filters( "air_block_acf_example_data_repeater_count/{$field_name}", $x_times, $field_name, $field );
+        $x_times = apply_filters( "air_block_acf_example_data_repeater_count/{$field_name}", $x_times, $field_name, $field ); // phpcs:ignore
         $x_times = apply_filters( 'air_block_acf_example_data_repeater_count', $x_times, $field_name, $field );
 
         // Duplicate the one repeater field subset
@@ -212,8 +209,8 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
   }
 
   // Allow filtering the example data for specific field type, name or in general
-  $data = apply_filters( "air_block_acf_example_data/{$field_type}", $data, $field_type, $field_name, $field );
-  $data = apply_filters( "air_block_acf_example_data/{$field_name}", $data, $field_type, $field_name, $field );
+  $data = apply_filters( "air_block_acf_example_data/{$field_type}", $data, $field_type, $field_name, $field ); // phpcs:ignore
+  $data = apply_filters( "air_block_acf_example_data/{$field_name}", $data, $field_type, $field_name, $field ); // phpcs:ignore
   $data = apply_filters( 'air_block_acf_example_data', $data, $field_type, $field_name, $field );
 
   return $data;
