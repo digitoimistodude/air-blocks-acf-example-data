@@ -1,3 +1,7 @@
+### 1.0.5: 2026-01-09
+
+* Remove whitespace after break statement
+
 ### 1.0.4: 2026-01-09
 
 * Update PHP compatibility to 9.3, fixing build errors

@@ -5,7 +5,7 @@
  * Plugin URI: https://dude.fi
  * Author: Digitoimisto Dude Oy
  * Author URI: https://dude.fi
- * Version: 1.0.4
+ * Version: 1.0.5
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
@@ -206,7 +206,7 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       }
 
       break;
-    
+
     case 'group':
       $sub_set_data = [];
 
