@@ -38,6 +38,7 @@ Currently following ACF field types are supported:
 * Gallery
 * Relationship
 * Repeater
+* Group
 * Select __(only with icon_svg fields)__
 
 ## Hooks
