@@ -5,7 +5,7 @@
  * Plugin URI: https://dude.fi
  * Author: Digitoimisto Dude Oy
  * Author URI: https://dude.fi
- * Version: 1.0.3
+ * Version: 1.0.4
  * License: GPL2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  *
