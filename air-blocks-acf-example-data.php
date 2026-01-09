@@ -206,6 +206,27 @@ function get_field_type_example_data( $field_type, $field_name = null, $field = 
       }
 
       break;
+    
+    case 'group':
+      $sub_set_data = [];
+
+      if ( ! empty( $field['sub_fields'] ) ) {
+        // Loop group sub fields
+        foreach ( $field['sub_fields'] as $sub_field ) {
+          // Get example data for the sub field
+          $sub_field_data = get_field_type_example_data( $sub_field['type'], $sub_field['name'], $sub_field );
+
+          // Maybe add field and example data to parent field
+          if ( ! empty( $sub_field_data ) ) {
+            $sub_set_data[ $sub_field['name'] ] = $sub_field_data;
+          }
+        }
+
+        $data = $sub_set_data;
+      }
+
+      break;
+
   }
 
   // Allow filtering the example data for specific field type, name or in general
