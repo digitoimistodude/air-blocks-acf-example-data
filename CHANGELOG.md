@@ -1,3 +1,7 @@
+### 1.0.3: 2026-01-09
+
+* Add support for group fields
+
 ### 1.0.2: 2025-05-06
 
 * Fix failing build
